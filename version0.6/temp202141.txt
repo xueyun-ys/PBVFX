@@ -1,0 +1,147 @@
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>  
+#include <sstream>
+#include <string>
+//stdlib.h里面定义了五种类型、一些宏和通用工具函数。类型例如size_t、wchar_t、div_t、ldiv_t和lldiv_t；宏例如EXIT_FAILURE、EXIT_SUCCESS、RAND_MAX和MB_CUR_MAX等等；常用的函数如malloc()、calloc()、realloc()、free()、system()、atoi()、atol()、rand()、 srand()、exit()等等。 
+using namespace std;
+int main()
+{
+	string s, str, s1, s2, s3, s4;
+	ifstream inf;
+	inf.open("C:\\Users\\DELL\\Desktop\\M1-91(YINHU)-jm17w-zhk.obj");
+ 
+	int vn = 0;
+	int vnum = 0;
+	int fnum = 0;
+ 
+	while (getline(inf, s))
+	{
+		istringstream in(s);
+		in >> s1 >> s2 >> s3 >> s4;
+ 
+		if (s[0]=='v')
+		{
+			if (s[1] = 'n')
+			{
+				vn++;
+			}
+			else
+			{
+				vnum++;
+			}
+ 
+		}
+ 
+		float a = 0, b = 0, c = 0;
+		if (s[0] == 'f')
+		{
+			for (int k = 0; s2[k] != '/'; k++)
+			{
+				a = a * 10 + (s2[k] - 48);
+			}
+ 
+			for (int k = 0; s3[k] != '/'; k++)
+			{
+				b = b * 10 + (s3[k] - 48);
+			}
+ 
+			for (int k = 0; s4[k] != '/'; k++)
+			{
+				c = c * 10 + (s4[k] - 48);
+			}
+			fnum++;
+ 
+		
+			cout << a << " ";
+			cout << b << " ";
+			cout << c << " ";
+		
+ 
+		}
+		cout << "\n";
+ 
+		//cout<<s1<<" "<<s2<<" "<<s3<<" "<<s4;
+ 
+	}
+ 
+	cout << vn << "\n";
+	cout << vnum << "\n";
+	cout << fnum << "\n";
+ 
+	inf.close();
+	return 0;
+}
+
+————————————————
+版权声明：本文为CSDN博主「gguygbb」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/u012746763/article/details/45640671
+
+
+
+
+
+void CMainWnd::ReadPIC()
+{
+    ifstream ifs(name);//cube bunny Eight
+    string s;
+    Mian *f;
+    POINT3 *v;
+    FaXiangLiang *vn;
+    WenLi    *vt;
+    while(getline(ifs,s))
+    {
+        if(s.length()<2)continue;
+        if(s[0]=='v'){
+            if(s[1]=='t'){//vt 0.581151 0.979929 纹理
+                istringstream in(s);
+                vt=new WenLi();
+                string head;
+                in>>head>>vt->TU>>vt->TV;
+                m_pic.VT.push_back(*vt);
+            }else if(s[1]=='n'){//vn 0.637005 -0.0421857 0.769705 法向量
+                istringstream in(s);
+                vn=new FaXiangLiang();
+                string head;
+                in>>head>>vn->NX>>vn->NY>>vn->NZ;
+                m_pic.VN.push_back(*vn);
+            }else{//v -53.0413 158.84 -135.806 点
+                istringstream in(s);
+                v=new POINT3();
+                string head;
+                in>>head>>v->X>>v->Y>>v->Z;
+                m_pic.V.push_back(*v);
+            }
+        }
+        else if(s[0]=='f'){//f 2443//2656 2442//2656 2444//2656 面
+            for(int k=s.size()-1;k>=0;k--){
+                if(s[k]=='/')s[k]=' ';
+            }
+            istringstream in(s);
+            f=new Mian();
+            string head;
+            in>>head;
+            int i=0;
+            while(i<3)
+            {
+                if(m_pic.V.size()!=0)
+                {
+                    in>>f->V[i];
+                    f->V[i]-=1;
+                }
+                if(m_pic.VT.size()!=0)
+                {
+                    in>>f->T[i];
+                    f->T[i]-=1;
+                }
+                if(m_pic.VN.size()!=0)
+                {
+                    in>>f->N[i];
+                    f->N[i]-=1;
+                }
+                i++;
+            }
+            m_pic.F.push_back(*f);
+        }
+    }
+}
